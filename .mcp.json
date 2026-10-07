@@ -1,0 +1,14 @@
+{
+  "$comment": "Repo-level MCP server configuration for Claude Code, Cursor, and other MCP-aware clients. VS Code Copilot uses the matching project entry in .vscode/mcp.json.",
+  "mcpServers": {
+    "codegraph": {
+      "$comment": "CodeGraph — semantic code intelligence: symbol lookup, callers/callees, route mapping. In MCP mode CodeGraph uses the client's workspace root, so this config is portable across clones and machines. See docs/guides/MCP_SETUP.md.",
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@colbymchenry/codegraph", "serve", "--mcp"],
+      "env": {
+        "CODEGRAPH_MCP_TOOLS": "explore,node,search,callers,callees,impact"
+      }
+    }
+  }
+}
