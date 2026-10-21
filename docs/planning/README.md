@@ -7,4 +7,4 @@ work, and the only place where "phases" and `[ ]` bullets are authoritative.
 
 Agents reading this folder: when implementing a phase, drain every `[ ]`
 bullet in that phase before handing back. See
-[`../skills/planning/phase-persistence.prompt.md`](../skills/planning/phase-persistence.prompt.md).
+[`../../.agents/skills/phase-persistence/SKILL.md`](../../.agents/skills/phase-persistence/SKILL.md).

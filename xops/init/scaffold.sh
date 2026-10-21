@@ -162,7 +162,7 @@ if [[ $DRY_RUN -eq 0 ]]; then
 fi
 
 if [[ "$SRC_ROOT" == "$TARGET" ]]; then
-  warn "source == target — this is a re-scaffold of the framework repo itself"
+  log_warn "source == target — this is a re-scaffold of the framework repo itself"
 fi
 
 log_step "🏗  agentic-workspace scaffolder"

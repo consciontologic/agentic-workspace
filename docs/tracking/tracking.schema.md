@@ -11,7 +11,7 @@
 - Format: RFC 4180 CSV. The header is the first line and is fixed.
 - **Append-only.** Existing rows are immutable. Corrections land as a *new*
   row with `action=note` and a `refs` link to the prior `run_id`.
-- Append via [`xops/agent/tracking_append.sh`](../xops/agent/tracking_append.sh) —
+- Append via [`xops/agent/tracking_append.sh`](../../xops/agent/tracking_append.sh) —
   it enforces every invariant below and is atomic under `flock(1)`.
 
 ## Columns (9, in order)
@@ -62,7 +62,7 @@
 
 ## How `make git` reads this file
 
-See [`xops/makefile/git_ops.py`](../xops/makefile/git_ops.py):
+See [`xops/makefile/git_ops.py`](../../xops/makefile/git_ops.py):
 
 1. Find rows where `action=commit`, `status=completed`,
    `commit_sha=pending` AND `run_id` is NOT already mentioned in any

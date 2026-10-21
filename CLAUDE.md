@@ -43,8 +43,6 @@ domain rules.
   forbidden-action list lives in `AGENTS.md` §2 + §4, not in tool config.
 - **MCP servers.** Defined in [`.mcp.json`](.mcp.json). Picked up
   automatically by Claude Code.
-- **Plugin manifest.** [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json)
-  declares this repo as a workspace Claude can attach to.
 - **Slash commands.** Project slash commands live under
   [`.github/prompts/`](.github/prompts/) — they are written for Copilot
   Chat but are readable Markdown procedures you can follow.

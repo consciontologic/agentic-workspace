@@ -143,7 +143,17 @@ test_no_skills_flag() {
   rm -rf "$target"
 }
 
+# ── test: source == target warns instead of crashing ──────────────────────
+test_same_dir_warns() {
+  local out got=0
+  out="$(bash "$SCAFFOLD" --target "$REPO_ROOT" --dry-run 2>&1)" || got=$?
+  ok_if "source == target dry-run exits 0 (got $got)" "$([[ $got -eq 0 ]] && echo true || echo false)"
+  ok_if "source == target prints warning" "$([[ "$out" == *"source == target"* ]] && echo true || echo false)"
+  ok_if "no 'command not found' error" "$([[ "$out" != *"command not found"* ]] && echo true || echo false)"
+}
+
 # ── run all tests ──────────────────────────────────────────────────────────
+test_same_dir_warns
 test_dryrun_no_files_created
 test_dryrun_exits_zero
 test_real_run_creates_agents_md
