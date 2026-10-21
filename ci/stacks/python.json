@@ -1,0 +1,18 @@
+{
+  "version_file": "pyproject.toml",
+  "version_regex": "^version\\s*=\\s*\"(?P<v>[^\"]+)\"",
+  "artifact_dir": "dist",
+  "commands": {
+    "deps": "python3 -m pip install --upgrade pip && python3 -m pip install -e '.[dev]'",
+    "verify": "python3 -m pytest",
+    "build": "python3 -m pip install build && python3 -m build",
+    "security": "python3 -m pip install pip-audit && python3 -m pip_audit"
+  },
+  "dependabot_ecosystem": "pip",
+  "setup_steps": [
+    "- uses: {{PIN:actions/setup-python}}",
+    "  with:",
+    "    python-version: '3.x'",
+    "    cache: pip"
+  ]
+}

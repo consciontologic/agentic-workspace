@@ -203,6 +203,7 @@ agentic-workspace/
 ├── .agentic-workspace-version                        # current framework version (framework-only)
 ├── .github/, .vscode/, .mcp.json                    # per-agent wiring
 ├── .agents/skills/          # curated skill library (one SKILL.md per subfolder)
+├── ci/                      # optional, standalone GitHub CI/CD generator (see ci/README.md)
 ├── docs/
 │   ├── tracking/            # tracking log + schema + state + context
 │   ├── planning/ROADMAP.md

@@ -4,6 +4,10 @@
 
 ### Added
 
+- Optional standalone `ci/` kit (not wired into `install.sh`/`scaffold.sh`): a one-box prompt,
+  agent guide, renderer, validator and GitHub-settings script that generate a gitflow +
+  SemVer release + GHCR/Pages deployment pipeline with grouped CI logging, modelled on the
+  wfform and worthhit repositories.
 - Codex is included by default and selectable with `--agents codex`: native
   project configuration, four adapted agent roles, explicit prompt skills,
   shared instructions and CodeGraph MCP for local ChatGPT desktop / Codex use.

@@ -1,0 +1,33 @@
+{
+  "$comment": "Copy to <target>/.github/cicd.json and edit. Only 'repository' and 'stack' are required; everything else has a default (see ci/AGENT_GUIDE.md).",
+  "repository": "OWNER/REPO",
+  "project": "repo",
+  "stack": "node",
+  "production_branch": "main",
+  "integration_branch": "develop",
+  "agent_prefixes": ["codex", "claude", "copilot"],
+  "tag_prefix": "",
+  "changelog": "CHANGELOG.md",
+  "artifact_dir": "dist",
+  "commands": {
+    "deps": "npm ci",
+    "verify": "npm test",
+    "build": "npm run build",
+    "security": "npm audit --omit=dev --audit-level=high"
+  },
+  "features": {
+    "container": false,
+    "pages": false,
+    "pages_repo": false
+  },
+  "container": {
+    "image": "ghcr.io/owner/repo",
+    "context": ".",
+    "dockerfile": "Dockerfile",
+    "smoke_port": 8080,
+    "smoke_path": "/"
+  },
+  "pages": {"url": "https://OWNER.github.io/REPO"},
+  "pages_repo": {"repository": "OWNER/OWNER.github.io", "branch": "main", "subdir": "", "secret": "DEPLOY_TOKEN"},
+  "production_reviewer": {"login": "OWNER", "id": 0}
+}

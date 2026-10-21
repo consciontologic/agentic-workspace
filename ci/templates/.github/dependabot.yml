@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: {{INTEGRATION}}
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+#@if ecosystem
+  - package-ecosystem: {{ECOSYSTEM}}
+    directory: /
+    target-branch: {{INTEGRATION}}
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: weekly
+    groups:
+      dependencies:
+        patterns: ['*']
+#@endif
+#@if container
+  - package-ecosystem: docker
+    directory: /
+    target-branch: {{INTEGRATION}}
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: weekly
+#@endif

@@ -1,0 +1,18 @@
+{
+  "version_file": "package.json",
+  "version_regex": "\"version\"\\s*:\\s*\"(?P<v>[^\"]+)\"",
+  "artifact_dir": "dist",
+  "commands": {
+    "deps": "npm ci",
+    "verify": "npm run lint --if-present && npm test --if-present",
+    "build": "npm run build",
+    "security": "npm audit --omit=dev --audit-level=high"
+  },
+  "dependabot_ecosystem": "npm",
+  "setup_steps": [
+    "- uses: {{PIN:actions/setup-node}}",
+    "  with:",
+    "    node-version: 'lts/*'",
+    "    cache: npm"
+  ]
+}

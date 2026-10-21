@@ -1,0 +1,140 @@
+name: 📦 Packages and release
+
+run-name: {{PROJECT}}-release:${{ inputs.version || 'artifacts' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Plain MAJOR.MINOR.PATCH matching {{PRODUCTION}} (leave empty to build artifacts only)'
+        type: string
+        default: ''
+
+env:
+  RELEASE_VERSION: ${{ inputs.version }}
+
+permissions:
+  contents: read
+  actions: read
+
+# Releases never overlap and a running publication is never cancelled.
+concurrency:
+  group: {{PROJECT}}-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/{{PRODUCTION}}'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: {{PIN:actions/checkout}}
+        with:
+          persist-credentials: false
+      - name: Require version, promoted {{INTEGRATION}} content and validated source
+        if: inputs.version != ''
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: tool/ci-step.sh 'Prior source validation' python3 tool/release_guard.py source
+      {{SETUP_STEPS}}
+      - run: tool/ci-step.sh 'Dependencies' make deps
+      - run: tool/ci-step.sh 'Build the approved source once' make build
+      - run: tool/ci-step.sh 'Version and archive' make release.prepare
+#@if container
+      - run: tool/ci-step.sh 'Build and save versioned image once' make image
+      - run: tool/ci-step.sh 'Read-only container smoke' make image.test
+#@endif
+      - name: Preflight immutable release identity
+        if: inputs.version != ''
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: tool/ci-step.sh 'Release preflight' python3 tool/release.py preflight
+      - uses: {{PIN:actions/upload-artifact}}
+        with:
+          name: {{PROJECT}}-release-${{ github.sha }}
+          path: build/release/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/{{PRODUCTION}}' && inputs.version != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      actions: read
+#@if container
+      packages: write
+#@endif
+    # The production environment holds the required human reviewer.
+    environment:
+      name: production
+      url: {{SITE_URL}}
+    steps:
+      - uses: {{PIN:actions/checkout}}
+        with:
+          persist-credentials: false
+      - name: Verify human approval receipt and current source
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: tool/ci-step.sh 'Human release receipt' python3 tool/release_guard.py approval
+      - uses: {{PIN:actions/download-artifact}}
+        with:
+          name: {{PROJECT}}-release-${{ github.sha }}
+          path: build/release/
+      - run: tool/ci-step.sh 'Verify exact approved bytes' python3 tool/release.py verify --extract build/site
+#@if container
+      - name: Authenticate scoped package publisher
+        env:
+          PACKAGE_TOKEN: ${{ github.token }}
+        run: printf '%s' "$PACKAGE_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+      - name: Preflight package conflicts
+        run: tool/ci-step.sh 'Immutable package check' python3 tool/container.py preflight
+      - name: Publish approved immutable package
+        run: tool/ci-step.sh 'Publish GHCR version' python3 tool/container.py publish
+#@endif
+#@if pages_repo
+      - name: Publish managed website artifacts by GitOps
+        env:
+          PAGES_DEPLOY_TOKEN: ${{ secrets.{{PAGES_SECRET}} }}
+        run: tool/ci-step.sh 'Publish website repository' python3 tool/publish_website.py build/site
+#@endif
+      - name: Publish SemVer tag and immutable release assets
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: tool/ci-step.sh 'Publish GitHub release' python3 tool/release.py publish
+#@if container
+      - name: Log out of package registry
+        if: always()
+        run: docker logout ghcr.io
+#@endif
+#@if pages
+
+  pages:
+    needs: publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: {{PIN:actions/checkout}}
+        with:
+          persist-credentials: false
+      - uses: {{PIN:actions/download-artifact}}
+        with:
+          name: {{PROJECT}}-release-${{ github.sha }}
+          path: build/release/
+      - run: tool/ci-step.sh 'Verify exact approved bytes' python3 tool/release.py verify --extract build/site
+      - uses: {{PIN:actions/upload-pages-artifact}}
+        with:
+          path: build/site
+      - id: deployment
+        uses: {{PIN:actions/deploy-pages}}
+#@endif

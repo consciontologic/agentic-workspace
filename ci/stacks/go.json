@@ -1,0 +1,17 @@
+{
+  "version_file": "VERSION",
+  "version_regex": "^(?P<v>\\S+)\\s*$",
+  "artifact_dir": "dist",
+  "commands": {
+    "deps": "go mod download",
+    "verify": "go vet ./... && go test ./...",
+    "build": "mkdir -p dist && go build -o dist/ ./...",
+    "security": "go run golang.org/x/vuln/cmd/govulncheck@latest ./..."
+  },
+  "dependabot_ecosystem": "gomod",
+  "setup_steps": [
+    "- uses: {{PIN:actions/setup-go}}",
+    "  with:",
+    "    go-version-file: go.mod"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version_file": "pubspec.yaml",
+  "version_regex": "^version:\\s*(?P<v>\\S+)\\s*$",
+  "artifact_dir": "build/web",
+  "commands": {
+    "deps": "flutter pub get --enforce-lockfile",
+    "verify": "dart format --output=none --set-exit-if-changed lib test && flutter analyze && flutter test",
+    "build": "flutter build web --release",
+    "security": "flutter pub outdated --no-dev-dependencies"
+  },
+  "dependabot_ecosystem": "pub",
+  "setup_steps": [
+    "- uses: {{PIN:subosito/flutter-action}}",
+    "  with:",
+    "    channel: stable",
+    "    cache: true"
+  ]
+}

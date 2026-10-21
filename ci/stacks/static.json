@@ -1,0 +1,15 @@
+{
+  "version_file": "VERSION",
+  "version_regex": "^(?P<v>\\S+)\\s*$",
+  "artifact_dir": "site",
+  "commands": {
+    "deps": "true",
+    "verify": "test -f site/index.html",
+    "build": "true",
+    "security": "true"
+  },
+  "dependabot_ecosystem": null,
+  "setup_steps": [
+    "- run: echo 'No toolchain needed for a hand-written static site.'"
+  ]
+}

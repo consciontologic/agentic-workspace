@@ -1,0 +1,67 @@
+name: 🧪 Checks
+
+on:
+  pull_request:
+    branches: [{{INTEGRATION}}, {{PRODUCTION}}]
+
+permissions:
+  contents: read
+
+# A newer push to the same PR supersedes the older run.
+concurrency:
+  group: {{PROJECT}}-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  branch-policy:
+    name: Branch policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: {{PIN:actions/checkout}}
+        with:
+          persist-credentials: false
+      - env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+        run: tool/ci-step.sh 'Gitflow branch policy' python3 tool/gitflow_check.py
+
+  # Quality and security run for PRs into {{INTEGRATION}} and hotfix PRs into {{PRODUCTION}}.
+  # Other {{PRODUCTION}} promotions reuse the exact tree validated on {{INTEGRATION}}; the
+  # release guard re-verifies that evidence, so a skipped job is never quality proof.
+  verify:
+    name: Verify
+    if: >-
+      {{GATE}}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: {{PIN:actions/checkout}}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      {{SETUP_STEPS}}
+      - run: tool/ci-step.sh 'Dependencies' make deps
+      - run: tool/ci-step.sh 'Verify' make verify
+      - run: tool/ci-step.sh 'Build' make build
+      - run: tool/ci-step.sh 'Versioned release archive' make release.prepare
+#@if container
+      - run: tool/ci-step.sh 'Container image' make image
+      - run: tool/ci-step.sh 'Read-only container smoke' make image.test
+#@endif
+
+  security:
+    name: Security
+    if: >-
+      {{GATE}}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: {{PIN:actions/checkout}}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      {{SETUP_STEPS}}
+      - run: tool/ci-step.sh 'Source credential and action-pin boundaries' python3 tool/repo_check.py
+      - run: tool/ci-step.sh 'Release and gitflow tool tests' python3 -m unittest discover -s test/tool -p 'test_*.py'
+      - run: tool/ci-step.sh 'Dependency security' make security

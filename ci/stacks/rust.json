@@ -1,0 +1,15 @@
+{
+  "version_file": "Cargo.toml",
+  "version_regex": "^version\\s*=\\s*\"(?P<v>[^\"]+)\"",
+  "artifact_dir": "dist",
+  "commands": {
+    "deps": "cargo fetch --locked",
+    "verify": "cargo fmt --check && cargo clippy --locked -- -D warnings && cargo test --locked",
+    "build": "cargo build --release --locked && mkdir -p dist && cp target/release/* dist/ 2>/dev/null || true",
+    "security": "cargo install cargo-audit --locked && cargo audit"
+  },
+  "dependabot_ecosystem": "cargo",
+  "setup_steps": [
+    "- run: rustup toolchain install stable --profile minimal -c rustfmt -c clippy"
+  ]
+}
