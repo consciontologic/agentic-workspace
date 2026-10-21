@@ -20,6 +20,11 @@ saves whole rewrites.
 - [`/dependency-upgrade`](dependency-upgrade/SKILL.md) — Safe, incremental dependency upgrades with audit + tests.
 - [`/flaky-test-triage`](flaky-test-triage/SKILL.md) — Classify and fix non-deterministic tests; never re-run to hide them.
 
+### Workflow commands (explicit invocation only)
+
+- [`/plan`](plan/SKILL.md), [`/implement`](implement/SKILL.md), [`/review`](review/SKILL.md), [`/verify`](verify/SKILL.md) — drive the planner → implementer → reviewer → verifier gate.
+- [`/track`](track/SKILL.md), [`/roadmap-status`](roadmap-status/SKILL.md), [`/session-bootstrap`](session-bootstrap/SKILL.md) — tracking, roadmap summary, session recovery.
+
 ### Review
 
 - [`/self-review`](self-review/SKILL.md) — Before staging.

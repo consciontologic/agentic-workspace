@@ -107,26 +107,6 @@ def scaffold(source: Path, target: Path, codex: bool, mcp: bool, skills: bool,
             f"developer_instructions = {toml_string(developer_instructions)}", "",
         ]))
 
-    if skills:
-        for path in sorted((source / ".github/prompts").glob("*.prompt.md")):
-            name = path.name.removesuffix(".prompt.md")
-            skill_name = f"avb-{name}"
-            relative = path.relative_to(source)
-            emit(f".agents/skills/{skill_name}/SKILL.md", (
-                f"---\nname: {skill_name}\n"
-                f"description: Run the scaffold {name} workflow when explicitly requested by the user.\n---\n\n"
-                f"# {name.replace('-', ' ').title()}\n\n"
-                "Read [Codex runtime guidance](../../../docs/guides/CODEX_SETUP.md) first.\n"
-                f"Then read and execute the [{name} workflow](../../../{relative}).\n"
-                "Treat YAML frontmatter as source metadata, not executable configuration.\n"
-                "Use the user's request as the workflow input; translate slash-command references "
-                "to the corresponding avb skill. Delegate roles to native Codex agents, "
-                "or follow the role inline when delegation is unavailable and permitted.\n"
-            ))
-            emit(f".agents/skills/{skill_name}/agents/openai.yaml", (
-                "policy:\n  allow_implicit_invocation: false\n"
-            ))
-
 
 def main() -> None:
     parser = argparse.ArgumentParser()

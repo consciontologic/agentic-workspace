@@ -15,6 +15,12 @@
 
 ### Changed
 
+- Copilot slash commands migrated from `.github/prompts/*.prompt.md` to skills under
+  `.agents/skills/<name>/` (the single skill location, user-invoked only; Codex gets
+  `agents/openai.yaml` with implicit invocation disabled). The separate Codex `avb-*`
+  adapters and the `.github/prompts` install step were removed; the old `/self-review`
+  wrapper was dropped in favour of the existing `self-review` skill. Links in skills and
+  agents were corrected, and tests and docs follow the new layout.
 - Repository and framework renamed from `ai-vscode-basics` to `agentic-workspace`.
   All URLs, cache paths, documentation, scripts and the version stamp file now
   use the new name.

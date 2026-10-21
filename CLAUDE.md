@@ -44,8 +44,9 @@ domain rules.
 - **MCP servers.** Defined in [`.mcp.json`](.mcp.json). Picked up
   automatically by Claude Code.
 - **Slash commands.** Project slash commands live under
-  [`.github/prompts/`](.github/prompts/) — they are written for Copilot
-  Chat but are readable Markdown procedures you can follow.
+  [`.agents/skills/`](.agents/skills/) (`plan`, `implement`, `review`, `verify`, `track`,
+  `roadmap-status`, `session-bootstrap`) — written for Copilot Chat but readable Markdown
+  procedures you can follow.
 - **Memory.** If you keep session notes, write them under
   `docs/tracking/state/notes/` (gitignored).
 

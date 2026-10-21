@@ -1,12 +1,12 @@
 ---
-agent: agent
+name: track
 description: Append a tracking row to docs/tracking/tracking.csv for the work just completed.
+disable-model-invocation: true
 ---
-
 # Track work
 
-Append exactly one row to [`docs/tracking/tracking.csv`](../../docs/tracking/tracking.csv)
-via [`xops/agent/tracking_append.sh`](../../xops/agent/tracking_append.sh)
+Append exactly one row to [`docs/tracking/tracking.csv`](../../../docs/tracking/tracking.csv)
+via [`xops/agent/tracking_append.sh`](../../../xops/agent/tracking_append.sh)
 describing the work you just completed.
 
 Default field choices (override if the work is different):

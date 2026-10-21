@@ -1,11 +1,11 @@
 ---
-agent: ask
+name: review
 description: Peer-review the staged diff (or a commit range) and produce a categorized findings list.
+disable-model-invocation: true
 ---
-
 # Review changes
 
-Switch to the [`reviewer` custom agent](../agents/reviewer.agent.md).
+Switch to the [`reviewer` custom agent](../../../.github/agents/reviewer.agent.md).
 
 ## Inputs
 
@@ -15,7 +15,7 @@ Switch to the [`reviewer` custom agent](../agents/reviewer.agent.md).
 
 ## Steps
 
-1. Load [`.agents/skills/code-review/SKILL.md`](../../.agents/skills/code-review/SKILL.md).
+1. Load [`.agents/skills/code-review/SKILL.md`](../../../.agents/skills/code-review/SKILL.md).
 2. Read every changed file linearly.
 3. Verify the plan (if there is one) was followed bullet-for-bullet.
 4. Use existing test evidence for the reviewed changes or run the relevant gate in a fresh process when needed. Preserve the working tree.

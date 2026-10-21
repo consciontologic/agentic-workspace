@@ -1,11 +1,11 @@
 ---
-agent: ask
-description: Summarise current ROADMAP.md progress — checked / unchecked / blocked bullets per phase.
+name: roadmap-status
+description: "Summarise current ROADMAP.md progress — checked / unchecked / blocked bullets per phase."
+disable-model-invocation: true
 ---
-
 # Roadmap status
 
-Read [`docs/planning/ROADMAP.md`](../../docs/planning/ROADMAP.md) and produce:
+Read [`docs/planning/ROADMAP.md`](../../../docs/planning/ROADMAP.md) and produce:
 
 1. **Phase summary table** — for each top-level phase: total bullets,
    `[x]` count, `[~]` count, `[ ]` count.
@@ -17,7 +17,7 @@ Read [`docs/planning/ROADMAP.md`](../../docs/planning/ROADMAP.md) and produce:
    reason.
 
 Cross-reference with recent rows in
-[`docs/tracking/tracking.csv`](../../docs/tracking/tracking.csv) (last 20) to flag any
+[`docs/tracking/tracking.csv`](../../../docs/tracking/tracking.csv) (last 20) to flag any
 checkbox that should be `[x]` based on a `status=completed` commit row but
 isn't yet.
 

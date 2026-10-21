@@ -103,14 +103,13 @@ Codex is included in the default agent selection. For a Codex-only project:
 ```
 
 This generates native `.codex/agents/*.toml` roles, a project-local
-`.codex/config.toml` with CodeGraph MCP, and an explicit `avb-*` skill for every
-prompt. All shared skills (including supporting files), scoped instructions,
+`.codex/config.toml` with CodeGraph MCP, and all shared skills, including the explicit-invocation slash-command skills (including supporting files), scoped instructions,
 `AGENTS.md` and `CONVENTIONS.md` are installed. Requires Python 3.9+;
 CodeGraph uses its installed CLI or Node.js/npx.
 
 Open the target folder in **Codex** in the ChatGPT desktop app and review/approve
 project trust. Ordinary ChatGPT chats do not load local repository configuration.
-Start with `$avb-plan` or the skill picker. See
+Start with `$plan` or the skill picker. See
 [Codex setup](docs/guides/CODEX_SETUP.md) for runtime mappings, verification,
 permissions, opt-outs and repeat-install behavior. Native configuration support
 requires a current Codex client; the installer does not install or update it.
@@ -144,10 +143,9 @@ The agent in your project reads `AGENTS.md` first. That's it.
 | `AGENTS.md` | Master rulebook (model-agnostic). Every agent reads this first. |
 | `CLAUDE.md` / `CONVENTIONS.md` | Vendor entry points that delegate to `AGENTS.md`. |
 | `.github/copilot-instructions.md` | Copilot Chat / agent-mode rules. |
-| `.github/agents/` + `.github/prompts/` | Reusable custom agents and slash-command prompts. |
+| `.github/agents/` | Reusable custom agents (slash commands live in `.agents/skills/`). |
 | `.github/instructions/` + `.agents/instructions/` | Scoped instructions and shared roadmap discipline. |
 | `.codex/config.toml` + `.codex/agents/` | Generated Codex guidance, CodeGraph MCP and native subagent roles. |
-| `.agents/skills/avb-*/` | Generated Codex skill adapters for every shared prompt. |
 | `.vscode/{settings,tasks,mcp}.json` | VS Code workspace defaults. |
 | `.mcp.json` | Repo-level MCP server config (CodeGraph wired; rest stubbed). |
 | `Makefile` | Thin dispatcher → `xops/makefile/*.py`. |

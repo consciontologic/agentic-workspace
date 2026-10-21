@@ -17,7 +17,6 @@ discovery hints, slash-command pointers, and custom-agent conventions.
 | Master rulebook | [`AGENTS.md`](../AGENTS.md) |
 | Vendor entry points | [`CLAUDE.md`](../CLAUDE.md), [`CONVENTIONS.md`](../CONVENTIONS.md) |
 | Copilot custom agents | [`.github/agents/`](agents/) |
-| Copilot slash-command prompts | [`.github/prompts/`](prompts/) |
 | Always-on instruction files | [`.github/instructions/`](instructions/) |
 | Skill library (load on demand) | [`.agents/skills/README.md`](../.agents/skills/README.md) |
 | Project roadmap | [`docs/planning/ROADMAP.md`](../docs/planning/ROADMAP.md) |
@@ -70,7 +69,7 @@ before the next phase starts — no exceptions.
 | `/track` | Append a tracking row (used implicitly by `/implement`). |
 | `/roadmap-status` | Summarize ROADMAP checkbox progress. |
 
-Prompts live under [`.github/prompts/`](prompts/).
+Slash commands are skills under [`.agents/skills/`](../.agents/skills/README.md).
 
 ## 🧠 Load skills on demand
 

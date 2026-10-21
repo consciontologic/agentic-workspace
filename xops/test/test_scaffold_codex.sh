@@ -37,7 +37,7 @@ test_codex_install() {
   for rel in AGENTS.md CONVENTIONS.md .codex/config.toml \
     .codex/agents/planner.toml .codex/agents/implementer.toml \
     .codex/agents/reviewer.toml .codex/agents/verifier.toml \
-    .agents/skills/avb-plan/SKILL.md .agents/skills/avb-implement/SKILL.md \
+    .agents/skills/plan/SKILL.md .agents/skills/implement/SKILL.md \
     .agents/skills/test-driven-development/SKILL.md \
     .github/instructions/tests.instructions.md docs/guides/CODEX_SETUP.md; do
     ok_if "Codex installs $rel" "$([[ -f "$target/$rel" ]] && echo true || echo false)"
@@ -77,21 +77,17 @@ for agent in (source / '.github/agents').glob('*.agent.md'):
     assert 'coordinating parent' in native['developer_instructions']
     if name == 'reviewer':
         assert native['sandbox_mode'] == 'read-only'
-for prompt in (source / '.github/prompts').glob('*.prompt.md'):
-    name = prompt.name.removesuffix('.prompt.md')
-    folder = target / f'.agents/skills/avb-{name}'
-    skill = (folder / 'SKILL.md').read_text()
-    assert f'name: avb-{name}\n' in skill
-    assert f'../../../{prompt.relative_to(source)}' in skill
+for command in ('plan', 'implement', 'review', 'verify', 'track', 'roadmap-status', 'session-bootstrap'):
+    folder = target / f'.agents/skills/{command}'
+    assert f'name: {command}\n' in (folder / 'SKILL.md').read_text()
     assert 'allow_implicit_invocation: false' in (folder / 'agents/openai.yaml').read_text()
-    assert (target / prompt.relative_to(source)).read_bytes() == prompt.read_bytes()
 for asset in (source / '.agents/skills').rglob('*'):
     if asset.is_file():
         assert (target / asset.relative_to(source)).read_bytes() == asset.read_bytes()
 assert (target / '.agents/instructions/ROADMAP_DISCIPLINE.md').is_file()
 assert not (target / '.vscode').exists()
 PY
-  ok_if "native TOML, every agent/prompt/instruction, and skill assets validate" "$([[ $got -eq 0 ]] && echo true || echo false)"
+  ok_if "native TOML, every agent/command skill/instruction, and skill assets validate" "$([[ $got -eq 0 ]] && echo true || echo false)"
 }
 
 test_defaults_and_optouts() {
@@ -99,7 +95,7 @@ test_defaults_and_optouts() {
   run_install --target "$target" --no-mcp --no-skills
   ok_if "default selection includes Codex" "$([[ -f "$target/.codex/config.toml" ]] && echo true || echo false)"
   ok_if "default retains Copilot and Claude" "$([[ -f "$target/.github/copilot-instructions.md" && -f "$target/CLAUDE.md" ]] && echo true || echo false)"
-  ok_if "no-skills excludes native prompt adapters" "$([[ ! -e "$target/.agents/skills/avb-plan" && ! -e "$target/.agents/skills/test-driven-development" ]] && echo true || echo false)"
+  ok_if "no-skills excludes command skills" "$([[ ! -e "$target/.agents/skills/plan" && ! -e "$target/.agents/skills/test-driven-development" ]] && echo true || echo false)"
   ok_if "no-mcp excludes generic config and index" "$([[ ! -e "$target/.mcp.json" && ! -e "$target/.codegraph" ]] && echo true || echo false)"
   local got=0
   python3 - "$target/.codex/config.toml" <<'PY' || got=$?
@@ -113,7 +109,7 @@ assert 'Skills were explicitly disabled' in config['developer_instructions']
 PY
   ok_if "Codex opt-outs parse and override tool requirements" "$([[ $got -eq 0 ]] && echo true || echo false)"
   run_install --target "$TEST_ROOT/claude" --agents claude --no-mcp
-  ok_if "explicit non-Codex selection excludes Codex adapters" "$([[ ! -e "$TEST_ROOT/claude/.codex" && ! -e "$TEST_ROOT/claude/.agents/skills/avb-plan" ]] && echo true || echo false)"
+  ok_if "explicit non-Codex selection excludes Codex config" "$([[ ! -e "$TEST_ROOT/claude/.codex" ]] && echo true || echo false)"
 }
 
 test_existing_files() {
@@ -125,12 +121,12 @@ test_existing_files() {
   run_install --target "$target" --agents codex --no-mcp
   ok_if "existing Codex config is preserved" "$([[ $(< "$target/.codex/config.toml") == 'custom config' ]] && echo true || echo false)"
   ok_if "project installer and setup are preserved" "$([[ -f "$target/install.sh" && -f "$target/xops/init/setup.sh" ]] && echo true || echo false)"
-  printf 'custom skill\n' > "$target/.agents/skills/avb-plan/SKILL.md"
+  printf 'custom skill\n' > "$target/.agents/skills/plan/SKILL.md"
   run_install --target "$target" --agents codex --no-mcp
-  ok_if "existing prompt skill is preserved" "$([[ $(< "$target/.agents/skills/avb-plan/SKILL.md") == 'custom skill' ]] && echo true || echo false)"
+  ok_if "existing prompt skill is preserved" "$([[ $(< "$target/.agents/skills/plan/SKILL.md") == 'custom skill' ]] && echo true || echo false)"
   run_install --target "$target" --agents codex --no-mcp --force
-  ok_if "force regenerates Codex config and adapter" "$(
-    if grep -q 'approval_policy' "$target/.codex/config.toml" && grep -q 'name: avb-plan' "$target/.agents/skills/avb-plan/SKILL.md"; then echo true; else echo false; fi
+  ok_if "force regenerates Codex config and skill" "$(
+    if grep -q 'approval_policy' "$target/.codex/config.toml" && grep -q 'name: plan' "$target/.agents/skills/plan/SKILL.md"; then echo true; else echo false; fi
   )"
 }
 

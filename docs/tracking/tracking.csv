@@ -39,3 +39,5 @@ ts_utc,run_id,agent,scope,action,status,summary,refs,commit_sha
 2026-10-21T08:27:32Z,run-20261021082732-83783,copilot,docs-drift,commit,completed,fix(docs): repair stale links and scaffold warn call,CLAUDE.md;docs/planning/README.md;docs/guides/MODEL_PROFILES.md;docs/tracking/tracking.schema.md;xops/init/scaffold.sh;xops/test/test_scaffold_dryrun.sh,pending
 2026-10-21T08:59:01Z,run-20261021085901-180169,copilot,ci,commit,completed,feat(ci): add optional standalone GitHub CI/CD generator kit,ci/;xops/test/test_ci.sh;CHANGELOG.md;README.md,pending
 2026-10-21T09:07:15Z,run-20261021090715-212950,copilot,ci,commit,completed,"feat(ci): add GitHub preflight, deploy-secret setup and temp-token workflow",ci/,pending
+2026-10-21T09:19:15Z,run-20261021091915-250185,copilot,skills,commit,completed,refactor(agents): migrate Copilot prompts to skills and update installers,.github/skills;xops/init/scaffold.sh;xops/init/scaffold_codex.py,pending
+2026-10-21T09:26:16Z,run-20261021092616-282604,copilot,skills,commit,completed,refactor(agents): consolidate slash-command skills under .agents/skills,.agents/skills;xops/init/scaffold_codex.py;xops/init/scaffold.sh,pending

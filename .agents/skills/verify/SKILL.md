@@ -1,11 +1,11 @@
 ---
-agent: ask
-description: Run the mechanical verification gate on the staged diff — tests, lint, diff hygiene, tracking — and return PASS / FAIL.
+name: verify
+description: "Run the mechanical verification gate on the staged diff — tests, lint, diff hygiene, tracking — and return PASS / FAIL."
+disable-model-invocation: true
 ---
-
 # Verify changes
 
-Switch to the [`verifier` custom agent](../agents/verifier.agent.md).
+Switch to the [`verifier` custom agent](../../../.github/agents/verifier.agent.md).
 
 ## Inputs
 
@@ -15,7 +15,7 @@ Switch to the [`verifier` custom agent](../agents/verifier.agent.md).
 
 ## Steps
 
-1. Load [`.agents/skills/verification-before-completion/SKILL.md`](../../.agents/skills/verification-before-completion/SKILL.md).
+1. Load [`.agents/skills/verification-before-completion/SKILL.md`](../../../.agents/skills/verification-before-completion/SKILL.md).
 2. Run the repository's full test suite on a clean process.
 3. Run the project lint / type-check gate, if any.
 4. Read `git diff --cached` for hygiene — no debug artefacts, secrets, or stray files.
@@ -24,4 +24,4 @@ Switch to the [`verifier` custom agent](../agents/verifier.agent.md).
 6. Return **✅ PASS** or **❌ FAIL** with the exact failing check(s).
 
 Do not edit files, do not stage, do not commit. On FAIL, hand back to the
-[`implementer`](../agents/implementer.agent.md).
+[`implementer`](../../../.github/agents/implementer.agent.md).

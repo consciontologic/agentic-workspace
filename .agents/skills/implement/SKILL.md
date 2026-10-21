@@ -1,17 +1,17 @@
 ---
-agent: agent
-description: Execute a plan end-to-end. Drains every checklist bullet, ships tests with code, ends in staged / reverted / no-op / blocked.
+name: implement
+description: "Execute a plan end-to-end. Drains every checklist bullet, ships tests with code, ends in staged / reverted / no-op / blocked."
+disable-model-invocation: true
 ---
-
 # Implement a plan
 
-Switch to the [`implementer` custom agent](../agents/implementer.agent.md).
+Switch to the [`implementer` custom agent](../../../.github/agents/implementer.agent.md).
 
 ## Core Rule: Drain the entire requested scope → No interruption
 
 **`/implement` MUST drain every `[ ]` bullet in the requested scope before the
 turn ends — whether that scope is a single sub-phase, several phases, or the
-whole [ROADMAP](../../docs/planning/ROADMAP.md).** Phase boundaries are **not**
+whole [ROADMAP](../../../docs/planning/ROADMAP.md).** Phase boundaries are **not**
 stop points: the moment one phase's bullets are all `[x]`, immediately start
 the next unchecked phase in ROADMAP order and keep going until the whole
 requested scope is complete.
@@ -34,12 +34,12 @@ to proceed; you need no permission between bullets **or between phases**.
 ## Inputs & scope resolution
 
 - A plan (in chat, in `docs/planning/`, or referenced as a `[ ]` block in
-  the ROADMAP). If no plan exists, run [`plan`](plan.prompt.md) first.
+  the ROADMAP). If no plan exists, run [`plan`](../plan/SKILL.md) first.
 - Resolve the **target scope** from the invocation:
   - `/implement #phase <id>` (e.g. `0a.1`, `1`, `2.3`) → that one sub-phase / phase.
   - `/implement #phase <a>..<b>` or a list → every phase in that range / list, in order.
   - `/implement` with no phase (or "the roadmap" / "everything") → **every phase
-    in [ROADMAP.md](../../docs/planning/ROADMAP.md) that still has `[ ]` bullets**,
+    in [ROADMAP.md](../../../docs/planning/ROADMAP.md) that still has `[ ]` bullets**,
     top to bottom.
 - Build the full ordered list of `[ ]` bullets across **all** targeted phases
   before you start. That list is your work queue; you are done only when it is
@@ -55,11 +55,11 @@ process bullets in order.
 2. Write the test first when the bullet adds behavior / fixes a bug.
 3. Implement the smallest change that turns the test green.
 4. Run the project's test gate. If red:
-   - Read the log (via [`xops/agent/safe-run.sh`](../../xops/agent/safe-run.sh)).
+   - Read the log (via [`xops/agent/safe-run.sh`](../../../xops/agent/safe-run.sh)).
    - Diagnose the root cause; fix it.
    - Repair the current working tree; preserve pre-existing and concurrent changes.
 5. Append a tracking row via
-   [`xops/agent/tracking_append.sh`](../../xops/agent/tracking_append.sh):
+   [`xops/agent/tracking_append.sh`](../../../xops/agent/tracking_append.sh):
    `--action=commit --status=completed --commit-sha=pending --summary="..."`.
    The `summary` **must** be Conventional Commits (`type(scope)?(!)?: description`)
    — the appender now rejects (exit 65) anything else and `make git`
@@ -68,7 +68,7 @@ process bullets in order.
 7. `git add -A`.
 8. **Move to the next `[ ]` bullet.** **Do not stop.** Do not hand back to the user. Do not cite token count or context limits. When a phase's bullets are all `[x]`, run that phase's *Test plan* line, **then run the per-phase quality gate below (implementer → reviewer → verifier)**, update the ROADMAP status snapshot, then **immediately start the next targeted phase** at step 1. Keep going until:
    - Every bullet in **every targeted phase** is `[x]` **and each phase passed the quality gate**, **OR**
-   - You hit a documented real blocker (see [`phase-persistence`](../../.agents/skills/phase-persistence/SKILL.md)).
+   - You hit a documented real blocker (see [`phase-persistence`](../../../.agents/skills/phase-persistence/SKILL.md)).
 
 ## Per-phase quality gate — implementer → reviewer → verifier (no exception)
 
@@ -80,17 +80,17 @@ small" or "I'm confident" is not a waiver.
 1. **Implementer** (you) — drained the phase's bullets, each with its test, a
    tracking row, and `git add -A` (the Loop above).
 2. **Reviewer** — review the phase's staged diff per
-   [`reviewer.agent.md`](../agents/reviewer.agent.md): delegate to the
+   [`reviewer.agent.md`](../../../.github/agents/reviewer.agent.md): delegate to the
    `reviewer` subagent, or load
-   [`code-review`](../../.agents/skills/code-review/SKILL.md) and review inline.
+   [`code-review`](../../../.agents/skills/code-review/SKILL.md) and review inline.
    Produce 🚨 Blockers / ⚠️ Concerns / 💡 Suggestions.
    - **Fix every 🚨 Blocker** (and every ⚠️ you accept) back in implementer
      mode: edit, re-test, re-stage, append a corrective tracking row.
      **Re-review until zero blockers remain.**
 3. **Verifier** — run the mechanical gate per
-   [`verifier.agent.md`](../agents/verifier.agent.md): delegate to the
+   [`verifier.agent.md`](../../../.github/agents/verifier.agent.md): delegate to the
    `verifier` subagent, or load
-   [`verification-before-completion`](../../.agents/skills/verification-before-completion/SKILL.md)
+   [`verification-before-completion`](../../../.agents/skills/verification-before-completion/SKILL.md)
    and run inline. It runs the repository's verification checks cold, checks diff hygiene,
    tests-moved-with-code, the tracking row + Conventional Commits, and that
    every bullet is `[x]`. It returns **✅ PASS** or **❌ FAIL**.

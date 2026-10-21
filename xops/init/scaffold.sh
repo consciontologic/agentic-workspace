@@ -26,7 +26,7 @@
 #   - Root: LICENSE, AGENTS.md, CLAUDE.md, CONVENTIONS.md,
 #           Makefile, .gitignore, .gitattributes
 #           (README.md is NOT copied — a project-template README is written instead)
-#   - .github/        copilot-instructions.md + agents/ + prompts/
+#   - .github/        copilot-instructions.md + agents/
 #   - .vscode/        settings, tasks, mcp
 #   - Vendor configs  matching --agents
 #   - docs/tracking/  tracking.csv + schema + context + state/
@@ -284,7 +284,6 @@ if want_agent copilot || want_agent codex; then
   log_step "🐙 .github/ (shared workflow sources)"
   copy_file ".github/copilot-instructions.md"
   copy_glob ".github/agents/*.agent.md"
-  copy_glob ".github/prompts/*.prompt.md"
   copy_glob ".github/instructions/*.instructions.md"
 fi
 copy_glob ".agents/instructions/*.md"

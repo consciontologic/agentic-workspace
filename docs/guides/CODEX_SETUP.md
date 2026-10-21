@@ -30,11 +30,11 @@ installer reports it; resolve that prerequisite before relying on graph tools.
 | `.agents/instructions/` | Shared roadmap discipline |
 | `.agents/skills/` | Native skills, including supporting scripts and references |
 | `.codex/agents/*.toml` | Native planner, implementer, reviewer and verifier roles |
-| `.agents/skills/avb-*/` | Explicitly invoked adapters for every Copilot prompt |
+| `.agents/skills/{plan,implement,review,verify,track,roadmap-status,session-bootstrap}/` | Slash-command workflows; `agents/openai.yaml` makes them explicit-invocation only |
 | `.codex/config.toml` | Runtime guidance, approval/sandbox defaults, project CodeGraph MCP |
 
-The original `.github/agents/` and `.github/prompts/` documents are also installed
-as the authoritative workflow bodies. Native adapters reference them instead of
+The original `.github/agents/` documents are also installed as the authoritative
+role bodies; the native `.codex/agents/*.toml` roles reference them instead of
 duplicating their prose. Models and reasoning effort inherit the user's choices.
 
 ## Runtime Translation
@@ -55,7 +55,7 @@ instructions before work. These adaptations change client mechanics only:
   row, stages, and checks the final staged diff and tracking metadata.
 - `/plan`, `/implement`, `/review`, `/verify`, `/track`, `/self-review`,
   `/session-bootstrap` and `/roadmap-status` refer to the corresponding
-  `$avb-*` skills in Codex. These are not installed as native slash commands.
+  skills of the same name in Codex (`$plan`, `$implement`, ...). These are not installed as native slash commands.
   Use the client's skill picker where its invocation syntax differs.
 - Replace references to VS Code edit tools with the available patch tool;
   replace VS Code task runners with the documented shell commands. If a memory
@@ -79,10 +79,10 @@ instructions before work. These adaptations change client mechanics only:
 
 After opening and trusting the folder, start a new session and ask:
 
-> Without changing files, list the loaded instructions, available avb skills,
+> Without changing files, list the loaded instructions, available skills,
 > custom agents and CodeGraph tools. Report any unavailable dependency.
 
-Try `$avb-plan` with a small task. Ask Codex to delegate a read-only review to
+Try `$plan` with a small task. Ask Codex to delegate a read-only review to
 `reviewer`. Inspect the MCP panel (or `/mcp` in the CLI) and request a CodeGraph
 query against an actual symbol in your project. Configuration parsing alone
 does not prove the client loaded it or that the server is healthy.
@@ -90,7 +90,7 @@ does not prove the client loaded it or that the server is healthy.
 ## Repeat Installs And Portability
 
 The framework repository itself contains the shared rules and skills; native
-`.codex/` roles and `avb-*` adapters are generated in the target by the installer.
+`.codex/` roles are generated in the target by the installer.
 Cloning this framework alone is not the same as scaffolding a project.
 
 Shared anti-skills retain Copilot's `user-invocable: false` metadata. Codex

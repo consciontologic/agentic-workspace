@@ -14,7 +14,7 @@ verdict with the exact failing check.
 
 After the [`reviewer`](reviewer.agent.md) has **zero open 🚨 Blockers** on a
 phase's staged diff. You are the final gate before a phase counts as done in
-[`/implement`](../prompts/implement.prompt.md). No phase is exempt.
+[`/implement`](../../.agents/skills/implement/SKILL.md). No phase is exempt.
 
 ## Checklist — every item must pass
 
